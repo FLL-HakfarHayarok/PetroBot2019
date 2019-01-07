@@ -7,6 +7,7 @@ import robotUtils.RobotRun;
 import robotUtils.RobotStructure;
 import runs.MotorControl;
 import runs.Run1;
+import runs.Run2;
 
 /**
  * Sample master class, in charge of running specific runs.
@@ -23,7 +24,7 @@ public class RunSelector {
 	
 	public static void main(String[] args) {
 		
-		RobotStructure.getInstance();
+		RobotStructure.init();
 		
 		int arrowY = 0;
 		
@@ -94,7 +95,7 @@ public class RunSelector {
 			selectedRun = new Run1();
 			break;
 		case 2:
-			//selectedRun = new Run2();
+			selectedRun = new Run2();
 			break;
 		case 3:
 			//selectedRun = new Run3();
@@ -111,8 +112,8 @@ public class RunSelector {
 		}
 		selectedRun.start();
 		while(selectedRun.isAlive());
+		RobotStructure.getInstance().stopAllMotors();
 		
 	}
-	
 	
 }

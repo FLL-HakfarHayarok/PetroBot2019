@@ -35,9 +35,9 @@ public class RunStopper extends Thread {
 			if(Button.getButtons() == Button.ID_ESCAPE) {
 				while(Button.getButtons() == Button.ID_ESCAPE);
 				try {
-					RobotStructure.getInstance().stopAllMotors();
+					Thread.sleep(100);
 					target.interrupt();
-					Thread.sleep(200);		
+					Thread.sleep(100);		
 				}catch (Exception e) {
 					e.printStackTrace();
 				}

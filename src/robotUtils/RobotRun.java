@@ -1,5 +1,6 @@
 package robotUtils;
 
+import lejos.hardware.lcd.LCD;
 import lejos.robotics.RegulatedMotor;
 
 /**
@@ -16,12 +17,14 @@ public abstract class RobotRun extends Thread {
 	@Override
 	public void run() {
 		
-		//create a stopper for this run
+		 //create a stopper for this run
 		 new RunStopper(this).start();
 		
 		 //start chassis synchronization
      	 RobotStructure.getInstance().leftMotorReg.synchronizeWith(new RegulatedMotor[] {RobotStructure.getInstance().rightMotorReg});
 		 
+ 		 LCD.clear();
+     	 
 		//run the implemented contents method
 		runInstructions();
 	}

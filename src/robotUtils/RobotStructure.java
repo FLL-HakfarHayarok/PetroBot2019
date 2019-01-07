@@ -33,8 +33,8 @@ public class RobotStructure {
 	public final EV3LargeRegulatedMotor leftMotorReg, rightMotorReg;
 	public final EV3MediumRegulatedMotor armMotorLeftReg, armMotorRightReg;
 	public final EV3GyroSensor gyro;
-	public final EV3ColorSensor colorLeft, colorRight;
-	public final SampleProvider gyroAngleSampler, color1RedSampler;
+	public final EV3ColorSensor colorLeft, colorRight, colorCenter;
+	public final SampleProvider gyroAngleSampler, colorLeftIDSampler, colorRightIDSampler, colorCenterIDSampler, colorLeftRedSampler, colorRightRedSampler, colorCenterRedSampler;
 	
 	public RobotStructure() {
 		
@@ -43,13 +43,22 @@ public class RobotStructure {
 		armMotorLeftReg = new EV3MediumRegulatedMotor(MotorPort.A);
 		armMotorRightReg = new EV3MediumRegulatedMotor(MotorPort.D);
 		
-		gyro = new EV3GyroSensor(SensorPort.S2);
-		colorLeft = new EV3ColorSensor(SensorPort.S3);
-		colorRight = new EV3ColorSensor(SensorPort.S1);
+		gyro = new EV3GyroSensor(SensorPort.S3);
+		colorLeft = new EV3ColorSensor(SensorPort.S2);
+		colorRight = new EV3ColorSensor(SensorPort.S4);
+		colorCenter = new EV3ColorSensor(SensorPort.S1);
 		
-		//TODO: Create proper samples
 		gyroAngleSampler = gyro.getAngleMode();
-		color1RedSampler = colorLeft.getRedMode();
+		
+		colorLeftRedSampler = colorLeft.getRedMode();
+		colorRightRedSampler = colorRight.getRedMode();
+		colorCenterRedSampler = colorCenter.getRedMode();
+		
+		colorLeftIDSampler = colorLeft.getColorIDMode();
+		colorRightIDSampler = colorRight.getColorIDMode();
+		colorCenterIDSampler = colorCenter.getColorIDMode();
+		
+		
 		
 	}
 	
@@ -57,10 +66,36 @@ public class RobotStructure {
 	 * Stops all robot motors
 	 */
 	public void stopAllMotors() {
-		RobotStructure.getInstance().leftMotorReg.stop(true);
-		RobotStructure.getInstance().rightMotorReg.stop(true);
-		RobotStructure.getInstance().armMotorLeftReg.stop(true);
-		RobotStructure.getInstance().armMotorRightReg.stop(true);	
+		leftMotorReg.stop(true);
+		rightMotorReg.stop(true);
+		armMotorLeftReg.stop(true);
+		armMotorRightReg.stop();	
 	}
 	
+	public void floatAllMotors() {
+		leftMotorReg.flt(true);
+		rightMotorReg.flt(true);
+		armMotorLeftReg.flt(true);
+		armMotorRightReg.flt(true);
+	}
+	
+	public void brake(boolean brake) {		
+		if(brake) {
+		RobotStructure.getInstance().leftMotorReg.startSynchronization();
+			leftMotorReg.stop();
+			rightMotorReg.stop();
+		RobotStructure.getInstance().leftMotorReg.endSynchronization();
+		}
+		else {
+			leftMotorReg.flt(true);
+			rightMotorReg.flt();
+		}
+	}
+	
+	/**
+	 * Returns the average degrees moved by the robot
+	 */
+	public int getDistance() {
+		return (leftMotorReg.getTachoCount() + rightMotorReg.getTachoCount())/2;
+	}
 }
