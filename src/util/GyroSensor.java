@@ -43,13 +43,11 @@ public class GyroSensor {
 	public static void gyroFollower(double kP, int targetAngle, int P0, int degrees, Direction direction, boolean brake){
 		initGyroFollower(P0, direction);
 		LCD.clear();
-		while(RobotStructure.getInstance().getDistance() < degrees && !Thread.currentThread().isInterrupted()) {
+		while(Chassis.getDistance() < degrees && !Thread.currentThread().isInterrupted()) {
 			LCD.drawInt(getCurrentAngle(), 0, 0);
-			LCD.drawInt(RobotStructure.getInstance().leftMotorReg.getAcceleration(), 0, 5);
-			LCD.drawInt(RobotStructure.getInstance().rightMotorReg.getAcceleration(), 0, 10);
 			RobotStructure.getInstance().rightMotorReg.setSpeed((int) ((kP*(targetAngle+getCurrentAngle()))+P0));
 		}
-		RobotStructure.getInstance().brake(brake);
+		Chassis.brake(brake);
 	}
 	
 	
@@ -63,7 +61,7 @@ public class GyroSensor {
 			RobotStructure.getInstance().rightMotorReg.setSpeed((int) ((kP*(targetAngle+getCurrentAngle()))+P0));
 		}
 		
-		RobotStructure.getInstance().brake(brake);
+		Chassis.brake(brake);
 	}
 	
 	public static void turnToAngle(double angle, int power) {
@@ -83,6 +81,6 @@ public class GyroSensor {
 		while(Math.abs(getCurrentAngle()) < Math.abs(angle) && !Thread.currentThread().isInterrupted()) {
 			LCD.drawInt(getCurrentAngle(), 0, 0);
 		}
-		RobotStructure.getInstance().brake(true);
+		Chassis.brake(true);
 	}
 }

@@ -30,8 +30,9 @@ public class RobotStructure {
 		return instance;
 	}
 	
-	public final EV3LargeRegulatedMotor leftMotorReg, rightMotorReg;
-	public final EV3MediumRegulatedMotor armMotorLeftReg, armMotorRightReg;
+	public static EV3LargeRegulatedMotor leftMotorReg;
+	public static EV3LargeRegulatedMotor rightMotorReg;
+	public static EV3MediumRegulatedMotor armMotorLeftReg, armMotorRightReg;
 	public final EV3GyroSensor gyro;
 	public final EV3ColorSensor colorLeft, colorRight, colorCenter;
 	public final SampleProvider gyroAngleSampler, colorLeftIDSampler, colorRightIDSampler, colorCenterIDSampler, colorLeftRedSampler, colorRightRedSampler, colorCenterRedSampler;
@@ -57,45 +58,5 @@ public class RobotStructure {
 		colorLeftIDSampler = colorLeft.getColorIDMode();
 		colorRightIDSampler = colorRight.getColorIDMode();
 		colorCenterIDSampler = colorCenter.getColorIDMode();
-		
-		
-		
-	}
-	
-	/**
-	 * Stops all robot motors
-	 */
-	public void stopAllMotors() {
-		leftMotorReg.stop(true);
-		rightMotorReg.stop(true);
-		armMotorLeftReg.stop(true);
-		armMotorRightReg.stop();	
-	}
-	
-	public void floatAllMotors() {
-		leftMotorReg.flt(true);
-		rightMotorReg.flt(true);
-		armMotorLeftReg.flt(true);
-		armMotorRightReg.flt(true);
-	}
-	
-	public void brake(boolean brake) {		
-		if(brake) {
-		RobotStructure.getInstance().leftMotorReg.startSynchronization();
-			leftMotorReg.stop();
-			rightMotorReg.stop();
-		RobotStructure.getInstance().leftMotorReg.endSynchronization();
-		}
-		else {
-			leftMotorReg.flt(true);
-			rightMotorReg.flt();
-		}
-	}
-	
-	/**
-	 * Returns the average degrees moved by the robot
-	 */
-	public int getDistance() {
-		return (leftMotorReg.getTachoCount() + rightMotorReg.getTachoCount())/2;
 	}
 }
