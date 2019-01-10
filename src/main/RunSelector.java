@@ -8,9 +8,10 @@ import robotUtils.RobotStructure;
 import runs.MotorControl;
 import runs.Run1;
 import runs.Run2;
+import util.Chassis;
 
 /**
- * Sample master class, in charge of running specific runs.
+ * The master class, in charge of running specific runs.
  * Includes GUI display with an arrow indicator.
  * Arrow is moved using the up and down buttons on the robot, select run with center button.
  * Note that the RobotStructure must be initialized here in order for it to be used in all other programs.
@@ -37,23 +38,22 @@ public class RunSelector {
 			
 			case Button.ID_UP: 
 				while(Button.getButtons() == Button.ID_UP);
-				arrowY = Math.max(0, arrowY - 1);
+				arrowY = Math.max(0, arrowY - 1); //Raises the arrow by 1
 				break;
 			case Button.ID_DOWN:
 				while(Button.getButtons() == Button.ID_DOWN);
-				arrowY = Math.min(5, arrowY + 1);
+				arrowY = Math.min(5, arrowY + 1); //Lowers the arrow by 1
 				break;
 			case Button.ID_ENTER:
 				while(Button.getButtons() == Button.ID_ENTER);
-				startNewRun(arrowY);
+				startNewRun(arrowY); //Starts the run  based on the current arrow position
 				break;
 			case Button.ID_ESCAPE: // timer for 2 seconds or until released
 				long startTime = System.currentTimeMillis();
 				while (Button.getButtons() == Button.ID_ESCAPE) {
 					// set active to false if 2 seconds have passed without release
 					if (System.currentTimeMillis() - startTime > 2000) {
-						while (Button.getButtons() == Button.ID_ESCAPE)
-							;
+						while (Button.getButtons() == Button.ID_ESCAPE);
 						active = false;
 						return;
 					}
@@ -112,7 +112,7 @@ public class RunSelector {
 		}
 		selectedRun.start();
 		while(selectedRun.isAlive());
-		RobotStructure.getInstance().stopAllMotors();
+		Chassis.stopAllMotors();
 		
 	}
 	

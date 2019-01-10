@@ -21,7 +21,7 @@ public abstract class RobotRun extends Thread {
 		 new RunStopper(this).start();
 		
 		 //start chassis synchronization
-     	 RobotStructure.getInstance().leftMotorReg.synchronizeWith(new RegulatedMotor[] {RobotStructure.getInstance().rightMotorReg});
+     	 RobotStructure.leftMotorReg.synchronizeWith(new RegulatedMotor[] {RobotStructure.rightMotorReg});
 		 
  		 LCD.clear();
      	 

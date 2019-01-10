@@ -13,7 +13,7 @@ import lejos.robotics.SampleProvider;
  * other classes. All port and hardware changes should be altered in this class
  * and any calls to motors or sensors should directly reference this class.
  * 
- * @author John
+ * @author John & Wifi
  */
 public class RobotStructure {
 

@@ -14,10 +14,10 @@ public class ColorSensor {
 			
 	public static void calibrateColor() {
 		
-		//place robot on black
+		//Place robot on a black surface
 		Button.waitForAnyPress();
 		
-		//measure black
+		//Measure the brightness
 		
 		float[] sampleDump = new float[10];
 		double sum = 0;
@@ -43,11 +43,11 @@ public class ColorSensor {
 		blacks[2] = sum/10;
 		Delay.msDelay(100);
 		
-		//place on white
+		//Place on a white surface
 		
 		Button.waitForAnyPress();
 		
-		//measure whites
+		//Measure the brightness again
 		for (int i = 0; i < sampleDump.length; i++) {
 			RobotStructure.getInstance().colorLeftRedSampler.fetchSample(sampleDump, i);
 			sum+=sampleDump[i];
@@ -69,10 +69,16 @@ public class ColorSensor {
 		whites[2] = sum/10;
 		Delay.msDelay(100);
 		
-		//finish cal
+		//finish calibration
 		Button.waitForAnyPress();	
 	}
 	
+	/**
+	 * Returns the brightness measured by the robot
+	 * 
+	 * @param sensorID The sensor we want to check
+	 * @return The brightness on a scale of 0-100
+	 */
 	public static double getBrightness(ColorSensorID sensorID) {
 		switch(sensorID) {
 		case LEFT:
@@ -86,27 +92,35 @@ public class ColorSensor {
 		}
 	}
 	
+	/**
+	 * A gyro follower using the PID tuning algorithm.
+	 * In this case, we use the P portion of PID, as we found it the most optimal for usage in the FLL
+	 * The algorithm uses the following formula: Kp*E(t)+P0
+	 * E(t) = The difference between 50 and the brightness measureby the sensor
+	 * The robot will travel until we reach a distance
+	 *
+	 * @param kP
+	 * @param P0
+	 * @param degrees
+	 * @param direction
+	 * @param sensorID
+	 */
 	public static void lineFollower(double kP, int P0, int degrees, Direction direction, ColorSensorID sensorID) {
-		RobotStructure.getInstance().rightMotorReg.resetTachoCount();
-		RobotStructure.getInstance().leftMotorReg.resetTachoCount();
+
+		GyroSensor.initGyroFollower(P0, direction);
 		
-		RobotStructure.getInstance().rightMotorReg.setSpeed(P0);
-		RobotStructure.getInstance().leftMotorReg.setSpeed(P0);
-				
-		if(direction == Direction.FORWARD) {
-			RobotStructure.getInstance().rightMotorReg.forward();
-			RobotStructure.getInstance().leftMotorReg.forward();
-		}
-		else {
-			RobotStructure.getInstance().rightMotorReg.backward();
-			RobotStructure.getInstance().leftMotorReg.backward();
-		}
-		
-		while(RobotStructure.getInstance().getDistance() < degrees && !Thread.currentThread().isInterrupted()) {
-			RobotStructure.getInstance().rightMotorReg.setSpeed((int) (kP*(50-getBrightness(sensorID))+P0));
+		//Wait until a distance is traveled
+		while(Chassis.getDistance() < degrees && !Thread.currentThread().isInterrupted()) {
+			RobotStructure.rightMotorReg.setSpeed((int) (kP*(50-getBrightness(sensorID))+P0));
 		}
 	}
 	
+	/**
+	 * This function return whether the color seen is black
+	 * 
+	 * @param sensor The sensor we want to check
+	 * @return Whether the color seen by the sensor is black or not
+	 */
 	public static boolean isBlack(ColorSensorID sensor) {
 		
 		float[] dump = new float[1];

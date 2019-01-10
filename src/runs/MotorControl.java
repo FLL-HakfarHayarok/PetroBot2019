@@ -5,6 +5,14 @@ import lejos.hardware.lcd.LCD;
 import robotUtils.RobotRun;
 import robotUtils.RobotStructure;
 
+/**
+ * A class that replicates the motor control function used in EV3
+ * Has minimal UI, that displays whether the arms or wheels are being controlled
+ * Switching between arms and wheels is done using the enter button {@link lejos.hardware.Button}  
+ * 
+ * @author PetroBlitz #841
+ */
+
 public class MotorControl extends RobotRun {
 
 	public void runInstructions() {
@@ -15,52 +23,53 @@ public class MotorControl extends RobotRun {
 		LCD.clear();
 		LCD.drawString("wheels", 0, 0);
 
-		RobotStructure.getInstance().armMotorLeftReg.setSpeed(800);
-		RobotStructure.getInstance().armMotorRightReg.setSpeed(800);
-		RobotStructure.getInstance().leftMotorReg.setSpeed(800);
-		RobotStructure.getInstance().rightMotorReg.setSpeed(800);
+		//Setting the motor speed
+		RobotStructure.armMotorLeftReg.setSpeed(800);
+		RobotStructure.armMotorRightReg.setSpeed(800);
+		RobotStructure.leftMotorReg.setSpeed(800);
+		RobotStructure.rightMotorReg.setSpeed(800);
 
-		while (!Thread.currentThread().isInterrupted()) {
+		while (!Thread.currentThread().isInterrupted()) { //Will work while the run has not been stopped
 
 			buttonValues = Button.getButtons();
 
-			// check for each motor
+			// Check each possible situation, which buttons are pressed and acts accordingly
 			if ((buttonValues & Button.ID_UP) == Button.ID_UP) {
 				if (controllingArms)
-					RobotStructure.getInstance().armMotorLeftReg.forward();
+					RobotStructure.armMotorLeftReg.forward();
 				else
-					RobotStructure.getInstance().leftMotorReg.forward();
+					RobotStructure.leftMotorReg.forward();
 			}
 			else if ((buttonValues & Button.ID_DOWN) == Button.ID_DOWN) {
 				if (controllingArms)
-					RobotStructure.getInstance().armMotorLeftReg.backward();
+					RobotStructure.armMotorLeftReg.backward();
 				else
-					RobotStructure.getInstance().leftMotorReg.backward();
+					RobotStructure.leftMotorReg.backward();
 			}
 			else {
 				if (controllingArms)
-					RobotStructure.getInstance().armMotorLeftReg.stop(true);
+					RobotStructure.armMotorLeftReg.stop(true);
 				else
-					RobotStructure.getInstance().leftMotorReg.stop(true);
+					RobotStructure.leftMotorReg.stop(true);
 			}
 			
 			if ((buttonValues & Button.ID_RIGHT) == Button.ID_RIGHT) {
 				if (controllingArms)
-					RobotStructure.getInstance().armMotorRightReg.forward();
+					RobotStructure.armMotorRightReg.forward();
 				else
-					RobotStructure.getInstance().rightMotorReg.forward();
+					RobotStructure.rightMotorReg.forward();
 			}
 			else if ((buttonValues & Button.ID_LEFT) == Button.ID_LEFT) {
 				if (controllingArms)
-					RobotStructure.getInstance().armMotorRightReg.backward();
+					RobotStructure.armMotorRightReg.backward();
 				else
-					RobotStructure.getInstance().rightMotorReg.backward();
+					RobotStructure.rightMotorReg.backward();
 			}
 			else {
 				if (controllingArms)
-					RobotStructure.getInstance().armMotorRightReg.stop(true);
+					RobotStructure.armMotorRightReg.stop(true);
 				else
-					RobotStructure.getInstance().rightMotorReg.stop(true);
+					RobotStructure.rightMotorReg.stop(true);
 			}
 
 			if (buttonValues == Button.ID_ENTER) {

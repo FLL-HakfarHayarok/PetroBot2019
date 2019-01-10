@@ -1,29 +1,26 @@
 package runs;
 
-import lejos.hardware.lcd.LCD;
 import robotUtils.RobotRun;
 import robotUtils.RobotStructure;
+import util.Chassis;
+import util.Direction;
+import util.GyroSensor;
 
 public class Run1 extends RobotRun{
 
 	@Override
 	public void runInstructions() {
-		LCD.clear();
-		RobotStructure.getInstance().leftMotorReg.setSpeed(600);
-		RobotStructure.getInstance().rightMotorReg.setSpeed(600);
-		RobotStructure.getInstance().leftMotorReg.forward();
-		RobotStructure.getInstance().rightMotorReg.forward();
-		long startTime = System.currentTimeMillis();
-		while(System.currentTimeMillis() - startTime < 5000 && !Thread.currentThread().isInterrupted());
-		RobotStructure.getInstance().leftMotorReg.setSpeed(0);
-		RobotStructure.getInstance().rightMotorReg.setSpeed(0);
-		
-		System.out.println("slepping");
-		try {
-			Thread.sleep(2000);
-		} catch (InterruptedException e) {
-			return;
-		}
+		//Drives towards the extraction mission
+		GyroSensor.gyroFollower(0, 0, 350, Chassis.distToDeg(60), Direction.BACKWARD, false); 		
+		//Lower the arm and grab the cores
+		RobotStructure.armMotorLeftReg.setSpeed(800); 
+		RobotStructure.armMotorLeftReg.rotate(600);
+		//Driving to get away from the mission
+		GyroSensor.gyroFollower(0, 0, 400, Chassis.distToDeg(30), Direction.BACKWARD, false);
+		//Turning to avoid hitting the mission on the way back
+		GyroSensor.turnToAngle(-45, 500);
+		//Drive back to the base
+		GyroSensor.gyroFollower(20, 0, 400, Chassis.distToDeg(70), Direction.FORWARD, false);
 	}
 
 }
