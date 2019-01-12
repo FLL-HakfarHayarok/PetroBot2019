@@ -1,6 +1,7 @@
 package util;
 
 import robotUtils.RobotStructure;
+import robotUtils.RunHandler;
 
 /**
  * A class full of functions related to the movement of the robot 
@@ -10,7 +11,9 @@ import robotUtils.RobotStructure;
 
 public class Chassis {
 	private static final double K_perimeter  = 9.42*Math.PI; //The perimeter of the wheels
-	private static final double K_distance = 11.5; //The distance between the middle of the wheels
+	private static final double K_ratio = 0.6;
+	private static final double K_drive = K_perimeter * K_ratio;
+	private static final double K_distance = 17.2; //The distance between the middle of the wheels
 	
 	/**
 	 * A function that turns a distance value in cm to degrees
@@ -19,54 +22,71 @@ public class Chassis {
 	 * @return The distance in motor degrees
 	 */
 	public static int distToDeg(double dist) {
-		return (int) (dist/(K_perimeter))*360;
+		return (int) (dist/K_drive*360);
 	}
 	
 	/**
 	 * Stops all robot motors
 	 */
 	public static void stopAllMotors() {
-		RobotStructure.leftMotorReg.stop(true);
-		RobotStructure.rightMotorReg.stop(true);
-		RobotStructure.armMotorLeftReg.stop(true);
-		RobotStructure.armMotorRightReg.stop();	
+		RobotStructure.getInstance().leftMotorReg.stop(true);
+		RobotStructure.getInstance().rightMotorReg.stop(true);
+		RobotStructure.getInstance().armMotorLeftReg.stop(true);
+		RobotStructure.getInstance().armMotorRightReg.stop();	
 	}
 	
 	/**
 	 * Stops sending all robot motors power
 	 */
 	public static void floatAllMotors() {
-		RobotStructure.leftMotorReg.flt(true);
-		RobotStructure.rightMotorReg.flt(true);
-		RobotStructure.armMotorLeftReg.flt(true);
-		RobotStructure.armMotorRightReg.flt();
+		RobotStructure.getInstance().leftMotorReg.flt(true);
+		RobotStructure.getInstance().rightMotorReg.flt(true);
+		RobotStructure.getInstance().armMotorLeftReg.flt(true);
+		RobotStructure.getInstance().armMotorRightReg.flt();
 	}
 	
 	/**
 	 * This function stops the wheels 
 	 * 
-	 * @param brake Whether the robot should stop or just stop sending power to the motors
+	 * @param brake whether the robot should stop or just stop sending power to the motors
 	 */
 	public static void brake(boolean brake) {		
+		RobotStructure.getInstance().leftMotorReg.startSynchronization();
 		if(brake) {
-		RobotStructure.leftMotorReg.startSynchronization();
-			RobotStructure.leftMotorReg.stop();
-			RobotStructure.rightMotorReg.stop();
-		RobotStructure.leftMotorReg.endSynchronization();
+			RobotStructure.getInstance().leftMotorReg.stop();
+			RobotStructure.getInstance().rightMotorReg.stop();
 		}
 		else {
-			RobotStructure.leftMotorReg.startSynchronization();
-				RobotStructure.leftMotorReg.flt(true);
-				RobotStructure.rightMotorReg.flt();
-			RobotStructure.leftMotorReg.endSynchronization();
+			RobotStructure.getInstance().leftMotorReg.flt(true);
+			RobotStructure.getInstance().rightMotorReg.flt();
 		}
+		RobotStructure.getInstance().leftMotorReg.endSynchronization();
 	}
 	
+	/**
+	 * This function drives
+	 * 
+	 * @param d direction to drive
+	 */
+	public static void drive(Direction d) {		
+		RobotStructure.getInstance().leftMotorReg.startSynchronization();
+		if(d == Direction.FORWARD) {
+			RobotStructure.getInstance().leftMotorReg.forward();
+			RobotStructure.getInstance().rightMotorReg.forward();
+		}
+		else if (d == Direction.BACKWARD){
+			RobotStructure.getInstance().leftMotorReg.backward();
+			RobotStructure.getInstance().rightMotorReg.backward();
+		}
+		RobotStructure.getInstance().leftMotorReg.endSynchronization();
+	}
+	
+
 	/**
 	 * Returns the average degrees moved by the robot
 	 */
 	public static int getDistance() {
-		return (RobotStructure.leftMotorReg.getTachoCount() + RobotStructure.rightMotorReg.getTachoCount())/2;
+		return (Math.abs(RobotStructure.getInstance().leftMotorReg.getTachoCount() + RobotStructure.getInstance().rightMotorReg.getTachoCount()) / 2);
 	}
 	
 	/**
@@ -84,29 +104,29 @@ public class Chassis {
 	 */
 	public static void curveDrive(double radius, double angle, int maxPower, Side side, boolean brake) {
 		//Resetting the wheel encoders 
-		RobotStructure.leftMotorReg.resetTachoCount();
-		RobotStructure.rightMotorReg.resetTachoCount();
+		RobotStructure.getInstance().leftMotorReg.resetTachoCount();
+		RobotStructure.getInstance().rightMotorReg.resetTachoCount();
 		
 		double ratio = (radius-K_distance)/radius; //Calculating ratio between circles
 		double bigPerimeter = 2*radius*Math.PI; //Calculating the perimeter of the big circle
 		double dist = distToDeg((bigPerimeter/360)*angle); //The distance that we will travel in the circle
 		if (side == Side.RIGHT) {
-			RobotStructure.leftMotorReg.setSpeed(maxPower);
+			RobotStructure.getInstance().leftMotorReg.setSpeed(maxPower);
 			//Multiplying the power of the main motor by the ratio to get the power for the inner motor 
-			RobotStructure.rightMotorReg.setSpeed((int) (maxPower*ratio)); 
-			RobotStructure.leftMotorReg.forward();
-			RobotStructure.rightMotorReg.forward();
+			RobotStructure.getInstance().rightMotorReg.setSpeed((int) (maxPower*ratio)); 
+			RobotStructure.getInstance().leftMotorReg.forward();
+			RobotStructure.getInstance().rightMotorReg.forward();
 			//Waiting until the distance was traveled and confirming using the gyro
-			while(RobotStructure.leftMotorReg.getTachoCount() < dist && !Thread.currentThread().isInterrupted() && GyroSensor.getCurrentAngle() < angle) {}
+			while(RobotStructure.getInstance().leftMotorReg.getTachoCount() < dist && RunHandler.getCurrentRun().isActive()) {}
 		}
 		else {
-			RobotStructure.rightMotorReg.setSpeed(maxPower);
+			RobotStructure.getInstance().rightMotorReg.setSpeed(maxPower);
 			//Multiplying the power of the main motor by the ratio to get the power for the inner motor
-			RobotStructure.leftMotorReg.setSpeed((int) (maxPower*ratio));  
-			RobotStructure.rightMotorReg.forward();
-			RobotStructure.leftMotorReg.forward();
+			RobotStructure.getInstance().leftMotorReg.setSpeed((int) (maxPower*ratio));  
+			RobotStructure.getInstance().rightMotorReg.forward();
+			RobotStructure.getInstance().leftMotorReg.forward();
 			//Waiting until the distance was traveled and confirming using the gyro
-			while(RobotStructure.rightMotorReg.getTachoCount() < dist && !Thread.currentThread().isInterrupted() && GyroSensor.getCurrentAngle() < angle) {}
+			while(RobotStructure.getInstance().rightMotorReg.getTachoCount() < dist && RunHandler.getCurrentRun().isActive()) {}
 		}
 		brake(brake);
 	}

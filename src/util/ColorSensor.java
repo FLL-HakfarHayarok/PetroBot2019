@@ -6,6 +6,7 @@ import lejos.hardware.Button;
 import lejos.robotics.Color;
 import lejos.utility.Delay;
 import robotUtils.RobotStructure;
+import robotUtils.RunHandler;
 
 public class ColorSensor {
 	
@@ -29,6 +30,8 @@ public class ColorSensor {
 		blacks[0] = sum/10;
 		Delay.msDelay(100);
 		
+		sum = 0;//
+		
 		for (int i = 0; i < sampleDump.length; i++) {
 			RobotStructure.getInstance().colorCenterRedSampler.fetchSample(sampleDump, i);
 			sum+=sampleDump[i];
@@ -36,12 +39,16 @@ public class ColorSensor {
 		blacks[1] = sum/10;
 		Delay.msDelay(100);
 		
+		sum = 0;//
+		
 		for (int i = 0; i < sampleDump.length; i++) {
 			RobotStructure.getInstance().colorRightRedSampler.fetchSample(sampleDump, i);
 			sum+=sampleDump[i];
 		}
 		blacks[2] = sum/10;
 		Delay.msDelay(100);
+		
+		sum = 0;//
 		
 		//Place on a white surface
 		
@@ -55,12 +62,16 @@ public class ColorSensor {
 		whites[0] = sum/10;
 		Delay.msDelay(100);
 		
+		sum = 0;//
+		
 		for (int i = 0; i < sampleDump.length; i++) {
 			RobotStructure.getInstance().colorCenterRedSampler.fetchSample(sampleDump, i);
 			sum+=sampleDump[i];
 		}
 		whites[1] = sum/10;
 		Delay.msDelay(100);
+		
+		sum = 0;//
 		
 		for (int i = 0; i < sampleDump.length; i++) {
 			RobotStructure.getInstance().colorRightRedSampler.fetchSample(sampleDump, i);
@@ -75,7 +86,7 @@ public class ColorSensor {
 	
 	/**
 	 * Returns the brightness measured by the robot
-	 * 
+	 * DEPRECATED
 	 * @param sensorID The sensor we want to check
 	 * @return The brightness on a scale of 0-100
 	 */
@@ -89,6 +100,7 @@ public class ColorSensor {
 			return (blacks[2]+whites[2])/2;
 		default:
 			return 50;
+		
 		}
 	}
 	
@@ -110,8 +122,8 @@ public class ColorSensor {
 		GyroSensor.initGyroFollower(P0, direction);
 		
 		//Wait until a distance is traveled
-		while(Chassis.getDistance() < degrees && !Thread.currentThread().isInterrupted()) {
-			RobotStructure.rightMotorReg.setSpeed((int) (kP*(50-getBrightness(sensorID))+P0));
+		while(Chassis.getDistance() < degrees && RunHandler.getCurrentRun().isActive()) {
+			RobotStructure.getInstance().rightMotorReg.setSpeed((int) (kP*(50-getBrightness(sensorID))+P0)*8);
 		}
 	}
 	

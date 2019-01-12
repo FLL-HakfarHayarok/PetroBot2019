@@ -2,6 +2,7 @@ package util;
 
 import lejos.hardware.lcd.LCD;
 import robotUtils.RobotStructure;
+import robotUtils.RunHandler;
 
 /**
  * A bunch of functions related to the gyro sensor
@@ -41,19 +42,19 @@ public class GyroSensor {
 	 * @param dir The direction the motors should move
 	 */
 	public static void initGyroFollower(int power, Direction dir) {
-		RobotStructure.rightMotorReg.resetTachoCount();
-		RobotStructure.leftMotorReg.resetTachoCount();
+		RobotStructure.getInstance().rightMotorReg.resetTachoCount();
+		RobotStructure.getInstance().leftMotorReg.resetTachoCount();
 		
-		RobotStructure.rightMotorReg.setSpeed(power);
-		RobotStructure.leftMotorReg.setSpeed(power);
+		RobotStructure.getInstance().rightMotorReg.setSpeed(power);
+		RobotStructure.getInstance().leftMotorReg.setSpeed(power);
 		
 		if(dir == Direction.FORWARD) {
-			RobotStructure.rightMotorReg.forward();
-			RobotStructure.leftMotorReg.forward();
+			RobotStructure.getInstance().rightMotorReg.forward();
+			RobotStructure.getInstance().leftMotorReg.forward();
 		}
 		else {
-			RobotStructure.rightMotorReg.backward();
-			RobotStructure.leftMotorReg.backward();
+			RobotStructure.getInstance().rightMotorReg.backward();
+			RobotStructure.getInstance().leftMotorReg.backward();
 		}
 	}
 		
@@ -75,9 +76,9 @@ public class GyroSensor {
 		initGyroFollower(P0, direction);
 		LCD.clear();
 		//Wait until a distance is traveled
-		while(Math.abs(Chassis.getDistance()) < degrees && !Thread.currentThread().isInterrupted()) {
+		while(Math.abs(Chassis.getDistance()) < degrees && RunHandler.getCurrentRun().isActive()) {
 			LCD.drawInt(getCurrentAngle(), 0, 0);
-			RobotStructure.rightMotorReg.setSpeed((int) ((kP*(targetAngle+getCurrentAngle()))+P0));
+			RobotStructure.getInstance().rightMotorReg.setSpeed((int) ((kP*(targetAngle-getCurrentAngle()))+P0));
 		}
 		Chassis.brake(brake);
 	}
@@ -101,9 +102,9 @@ public class GyroSensor {
 		
 		initGyroFollower(P0, direction);
 		//Wait until the sensor sees black
-		while(!ColorSensor.isBlack(sensorID) && !Thread.currentThread().isInterrupted()) {
+		while(!ColorSensor.isBlack(sensorID) && RunHandler.getCurrentRun().isActive()) {
 			LCD.drawInt(getCurrentAngle(), 0, 0);
-			RobotStructure.rightMotorReg.setSpeed((int) ((kP*(targetAngle+getCurrentAngle()))+P0));
+			RobotStructure.getInstance().rightMotorReg.setSpeed((int) ((kP*(targetAngle-getCurrentAngle()))+P0));
 		}
 		
 		Chassis.brake(brake);
@@ -118,20 +119,20 @@ public class GyroSensor {
 	 */
 	public static void turnToAngle(double angle, int power) {
 		
-		RobotStructure.rightMotorReg.setSpeed(power);
-		RobotStructure.leftMotorReg.setSpeed(power);
+		RobotStructure.getInstance().rightMotorReg.setSpeed(power);
+		RobotStructure.getInstance().leftMotorReg.setSpeed(power);
 		
 		if (angle > 0) {
-			RobotStructure.rightMotorReg.forward();
-			RobotStructure.leftMotorReg.backward();
+			RobotStructure.getInstance().rightMotorReg.forward();
+			RobotStructure.getInstance().leftMotorReg.backward();
 		}
 		else {
-			RobotStructure.rightMotorReg.backward();
-			RobotStructure.leftMotorReg.forward();
+			RobotStructure.getInstance().rightMotorReg.backward();
+			RobotStructure.getInstance().leftMotorReg.forward();
 		}
 
 		//Waits until the angle is reached
-		while(Math.abs(getCurrentAngle()) < Math.abs(angle) && !Thread.currentThread().isInterrupted()) {
+		while(Math.abs(getCurrentAngle()) < Math.abs(angle) && RunHandler.getCurrentRun().isActive()) {
 			LCD.drawInt(getCurrentAngle(), 0, 0);
 		}
 		

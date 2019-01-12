@@ -2,25 +2,38 @@ package runs;
 
 import robotUtils.RobotRun;
 import robotUtils.RobotStructure;
+import robotUtils.RunHandler;
 import util.Chassis;
 import util.Direction;
 import util.GyroSensor;
+import util.Wait;
 
 public class Run1 extends RobotRun{
 
 	@Override
 	public void runInstructions() {
-		//Drives towards the extraction mission
-		GyroSensor.gyroFollower(0, 0, 350, Chassis.distToDeg(60), Direction.BACKWARD, false); 		
-		//Lower the arm and grab the cores
-		RobotStructure.armMotorLeftReg.setSpeed(800); 
-		RobotStructure.armMotorLeftReg.rotate(600);
-		//Driving to get away from the mission
-		GyroSensor.gyroFollower(0, 0, 400, Chassis.distToDeg(30), Direction.BACKWARD, false);
-		//Turning to avoid hitting the mission on the way back
-		GyroSensor.turnToAngle(-45, 500);
-		//Drive back to the base
-		GyroSensor.gyroFollower(20, 0, 400, Chassis.distToDeg(70), Direction.FORWARD, false);
+		GyroSensor.resetGyro();
+		GyroSensor.gyroFollower(30, 0, 500, Chassis.distToDeg(44), Direction.FORWARD, false);
+		
+		if(!RunHandler.getCurrentRun().isActive()) {
+			return;
+		}
+		
+		RobotStructure.getInstance().armMotorLeftReg.resetTachoCount();
+		RobotStructure.getInstance().armMotorLeftReg.setSpeed(800);
+		RobotStructure.getInstance().armMotorLeftReg.backward();		
+		Wait.waitForSeconds(2);
+		RobotStructure.getInstance().armMotorLeftReg.flt();
+		
+		GyroSensor.gyroFollower(30, 0, 500, Chassis.distToDeg(20), Direction.FORWARD, false);
+		GyroSensor.turnToAngle(120, 600);
+		
+		if(!RunHandler.getCurrentRun().isActive()) {
+			return;
+		}
+		
+		Chassis.drive(Direction.FORWARD);
+		Wait.waitForSeconds(5);
 	}
 
 }

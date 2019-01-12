@@ -30,9 +30,9 @@ public class RobotStructure {
 		return instance;
 	}
 	
-	public static EV3LargeRegulatedMotor leftMotorReg;
-	public static EV3LargeRegulatedMotor rightMotorReg;
-	public static EV3MediumRegulatedMotor armMotorLeftReg, armMotorRightReg;
+	public final EV3LargeRegulatedMotor leftMotorReg;
+	public final EV3LargeRegulatedMotor rightMotorReg;
+	public final EV3MediumRegulatedMotor armMotorLeftReg, armMotorRightReg;
 	public final EV3GyroSensor gyro;
 	public final EV3ColorSensor colorLeft, colorRight, colorCenter;
 	public final SampleProvider gyroAngleSampler, colorLeftIDSampler, colorRightIDSampler, colorCenterIDSampler, colorLeftRedSampler, colorRightRedSampler, colorCenterRedSampler;

@@ -8,6 +8,7 @@ import robotUtils.RobotStructure;
 import runs.MotorControl;
 import runs.Run1;
 import runs.Run2;
+import runs.Run3;
 import util.Chassis;
 
 /**
@@ -98,7 +99,7 @@ public class RunSelector {
 			selectedRun = new Run2();
 			break;
 		case 3:
-			//selectedRun = new Run3();
+			selectedRun = new Run3();
 			break;
 		case 4:
 			//selectedRun = new Run4();
@@ -112,7 +113,7 @@ public class RunSelector {
 		}
 		selectedRun.start();
 		while(selectedRun.isAlive());
-		Chassis.stopAllMotors();
+		Chassis.floatAllMotors();
 		
 	}
 	

@@ -11,20 +11,28 @@ import lejos.robotics.RegulatedMotor;
  */
 public abstract class RobotRun extends Thread {
 	
+	protected boolean active = false;
+	
 	/** 
 	 * Run method which is called by the Thread's "start"
 	 */
 	@Override
 	public void run() {
 		
-		 //create a stopper for this run
-		 new RunStopper(this).start();
+		this.active = true;
 		
-		 //start chassis synchronization
-     	 RobotStructure.leftMotorReg.synchronizeWith(new RegulatedMotor[] {RobotStructure.rightMotorReg});
+		LCD.clear();
+		
+		//set current run
+		RunHandler.setCurrentRun(this);
+		
+		//create a stopper for this run
+		new RunStopper().start();
+		
+		//start chassis synchronization
+		//TODO: input your motors here
+     	RobotStructure.getInstance().leftMotorReg.synchronizeWith(new RegulatedMotor[] {RobotStructure.getInstance().rightMotorReg});
 		 
- 		 LCD.clear();
-     	 
 		//run the implemented contents method
 		runInstructions();
 	}
@@ -35,5 +43,13 @@ public abstract class RobotRun extends Thread {
 	 * stop the run accordingly.
 	 */
 	public abstract void runInstructions();
+	
+	public boolean isActive() {
+		return this.active;
+	}
+	
+	public void deactivate(){
+		this.active = false;
+	}
 	
 }
