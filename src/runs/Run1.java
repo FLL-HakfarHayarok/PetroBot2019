@@ -13,25 +13,32 @@ public class Run1 extends RobotRun{
 	@Override
 	public void runInstructions() {
 		GyroSensor.resetGyro();
+		
+		//Driving straight to the extraction mission
 		GyroSensor.gyroFollower(30, 0, 500, Chassis.distToDeg(44), Direction.FORWARD, false);
 		
+		//Check if the run was stopped
 		if(!RunHandler.getCurrentRun().isActive()) {
 			return;
 		}
 		
+		//Lower the arm
 		RobotStructure.getInstance().armMotorLeftReg.resetTachoCount();
 		RobotStructure.getInstance().armMotorLeftReg.setSpeed(800);
 		RobotStructure.getInstance().armMotorLeftReg.backward();		
 		Wait.waitForSeconds(2);
 		RobotStructure.getInstance().armMotorLeftReg.flt();
 		
+		//Drive and turn away from the extraction mission
 		GyroSensor.gyroFollower(30, 0, 500, Chassis.distToDeg(20), Direction.FORWARD, false);
 		GyroSensor.turnToAngle(120, 600);
 		
+		//Check if the run was stopped
 		if(!RunHandler.getCurrentRun().isActive()) {
 			return;
 		}
 		
+		//Drive to the base
 		Chassis.drive(Direction.FORWARD);
 		Wait.waitForSeconds(5);
 	}
