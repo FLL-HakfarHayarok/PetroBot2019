@@ -10,13 +10,13 @@ import robotUtils.RunHandler;
  */
 
 public class Chassis {
-	private static final double K_perimeter  = 9.42*Math.PI; //The perimeter of the wheels
+	private static final double K_perimeter  = 6.24*Math.PI; //The perimeter of the wheels
 	private static final double K_ratio = 0.6;
 	private static final double K_drive = K_perimeter * K_ratio;
 	private static final double K_distance = 17.2; //The distance between the middle of the wheels
 	
 	/**
-	 * A function that turns a distance value in cm to degrees
+	 * A function that turns a distance value in centimeters to wheel revolutions in degrees
 	 * 
 	 * @param dist The distance in centimeter
 	 * @return The distance in motor degrees

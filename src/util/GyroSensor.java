@@ -78,7 +78,10 @@ public class GyroSensor {
 		//Wait until a distance is traveled
 		while(Math.abs(Chassis.getDistance()) < degrees && RunHandler.getCurrentRun().isActive()) {
 			LCD.drawInt(getCurrentAngle(), 0, 0);
-			RobotStructure.getInstance().rightMotorReg.setSpeed((int) ((kP*(targetAngle-getCurrentAngle()))+P0));
+			if(getCurrentAngle() < targetAngle)
+				RobotStructure.getInstance().rightMotorReg.setSpeed((int) ((kP*(targetAngle+getCurrentAngle()))+P0));
+			else
+				RobotStructure.getInstance().leftMotorReg.setSpeed((int) ((kP*(targetAngle-getCurrentAngle()))+P0));
 		}
 		Chassis.brake(brake);
 	}
