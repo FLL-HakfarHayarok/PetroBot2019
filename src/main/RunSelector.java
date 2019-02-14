@@ -9,6 +9,7 @@ import runs.MotorControl;
 import runs.Run1;
 import runs.Run2;
 import runs.Run3;
+import runs.Run4;
 import util.Chassis;
 
 /**
@@ -102,7 +103,7 @@ public class RunSelector {
 			selectedRun = new Run3();
 			break;
 		case 4:
-			//selectedRun = new Run4();
+			selectedRun = new Run4();
 			break;
 		case 5:
 			//selectedRun = new Run5();

@@ -30,7 +30,7 @@ public class Run1 extends RobotRun{
 		RobotStructure.getInstance().armMotorLeftReg.flt();
 		
 		//Drive and turn away from the extraction mission
-		GyroSensor.gyroFollower(30, 0, 500, Chassis.distToDeg(12), Direction.FORWARD, false);
+		GyroSensor.gyroFollower(30, 0, 500, Chassis.distToDeg(10), Direction.FORWARD, false);
 		GyroSensor.turnToAngle(-90, 600);
 		
 		//Check if the run was stopped

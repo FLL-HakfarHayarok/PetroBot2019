@@ -45,6 +45,27 @@ public class Chassis {
 		RobotStructure.getInstance().armMotorRightReg.flt();
 	}
 	
+    public static void rotateLeftArm(int angle, double powerTransmissionRelation)
+    {
+		RobotStructure.getInstance().armMotorLeftReg.rotate((int) (angle * powerTransmissionRelation));
+    }
+
+    public static void rotateRightArm(int angle, double powerTransmissionRelation)
+    {
+		RobotStructure.getInstance().armMotorRightReg.rotate((int) (angle * powerTransmissionRelation));
+    }
+
+    public static void rotateLeftArm(int angle)
+    {
+		RobotStructure.getInstance().armMotorLeftReg.rotate((int) (angle));
+    }
+
+    public static void rotateRightArm(int angle)
+    {
+		RobotStructure.getInstance().armMotorRightReg.rotate((int) (angle));
+    }
+
+    
 	/**
 	 * This function stops the wheels 
 	 * 
@@ -79,6 +100,19 @@ public class Chassis {
 			RobotStructure.getInstance().rightMotorReg.backward();
 		}
 		RobotStructure.getInstance().leftMotorReg.endSynchronization();
+	}
+	
+	public static void tankDrive(double leftSpeed, double rightSpeed, double revolutions) {
+		RobotStructure.getInstance().leftMotorReg.startSynchronization();
+			RobotStructure.getInstance().leftMotorReg.setSpeed((int) leftSpeed);
+			RobotStructure.getInstance().rightMotorReg.setSpeed((int) rightSpeed);
+		RobotStructure.getInstance().leftMotorReg.endSynchronization();
+		
+		RobotStructure.getInstance().leftMotorReg.resetTachoCount();
+		RobotStructure.getInstance().rightMotorReg.resetTachoCount();
+		
+		Chassis.drive(Direction.FORWARD);
+		Wait.waitUntil(Chassis.getDistance() >= revolutions);
 	}
 	
 
