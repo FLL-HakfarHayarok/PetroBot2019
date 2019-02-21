@@ -13,12 +13,12 @@ public class Run4 extends RobotRun {
 	@Override
 	public void runInstructions() {
 		GyroSensor.resetGyro();
-		GyroSensor.gyroFollower(15, 0, 400, Chassis.distToDeg(15), Direction.FORWARD, false);
+		GyroSensor.gyroFollower(15, 0, 400, Chassis.distToDeg(25), Direction.FORWARD, false);
 		RobotStructure.getInstance().armMotorRightReg.setSpeed(300);
 		Chassis.rotateRightArm(45, 9);
-		GyroSensor.gyroFollower(30, 0, 400, Chassis.distToDeg(50), Direction.FORWARD, false);
-		Chassis.rotateRightArm(-45, 9);
-		Chassis.tankDrive(-400, -400, Chassis.distToDeg(5));
+		GyroSensor.gyroFollower(30, 0, 400, Chassis.distToDeg(70), Direction.FORWARD, false);
+		Chassis.rotateRightArm(-200, 9);
+//		Chassis.tankDrive(-400, -400, Chassis.distToDeg(5));
 		
 
 	}

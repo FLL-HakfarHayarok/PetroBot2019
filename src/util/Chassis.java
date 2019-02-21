@@ -78,7 +78,7 @@ public class Chassis {
 			RobotStructure.getInstance().rightMotorReg.stop();
 		}
 		else {
-			RobotStructure.getInstance().leftMotorReg.flt(true);
+			RobotStructure.getInstance().leftMotorReg.flt();
 			RobotStructure.getInstance().rightMotorReg.flt();
 		}
 		RobotStructure.getInstance().leftMotorReg.endSynchronization();
@@ -102,15 +102,15 @@ public class Chassis {
 		RobotStructure.getInstance().leftMotorReg.endSynchronization();
 	}
 	
-	public static void tankDrive(double leftSpeed, double rightSpeed, double revolutions) {
-		RobotStructure.getInstance().leftMotorReg.setSpeed((int) leftSpeed);
-		RobotStructure.getInstance().rightMotorReg.setSpeed((int) rightSpeed);
+	public static void tankDrive(int leftSpeed, int rightSpeed, double revolutions, Direction direction) {
+		RobotStructure.getInstance().leftMotorReg.setSpeed(leftSpeed);
+		RobotStructure.getInstance().rightMotorReg.setSpeed(rightSpeed);
 		
 		RobotStructure.getInstance().leftMotorReg.resetTachoCount();
 		RobotStructure.getInstance().rightMotorReg.resetTachoCount();
 		
-		drive(Direction.FORWARD);
-		while(Math.abs(getDistance()) < revolutions);
+		drive(direction);
+		while(Math.abs(getDistance()) < revolutions && RunHandler.getCurrentRun().isActive());
 		brake(false);
 	}
 	

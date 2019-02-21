@@ -19,7 +19,7 @@ public class Run3 extends RobotRun {
 		Wait.waitForSeconds(0.3);
 		//Drives forward until reaches HABITATION HUB mission
 		GyroSensor.turnToAngle(-25, 150);	//Turns 45 degrees towards FOOD GROWTH mission
-		Chassis.tankDrive (200, 200, Chassis.distToDeg(30));
+//		Chassis.tankDrive (200, 200, Chassis.distToDeg(30));
 //		GyroSensor.turnToAngle(-90, 150);	//Turns 45 degrees towards FOOD GROWTH mission		
 //		GyroSensor.gyroFollower(15, -90, 300, Chassis.distToDeg(10), Direction.FORWARD, false);
 		

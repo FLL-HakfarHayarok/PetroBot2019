@@ -14,11 +14,14 @@ public class Run2 extends RobotRun {
 		GyroSensor.resetGyro();
 		
 		//Drive towards the mission chunk
-		GyroSensor.gyroFollower(50, -6, 500, Chassis.distToDeg(80), Direction.FORWARD, false);
+//		GyroSensor.gyroFollower(50, -6, 500, Chassis.distToDeg(80), Direction.FORWARD, false);
 
+		Chassis.tankDrive(500, 750, Chassis.distToDeg(80), Direction.FORWARD);
+		
 		RobotStructure.getInstance().rightMotorReg.setSpeed(800);
 		RobotStructure.getInstance().rightMotorReg.forward();
-		Wait.waitForSeconds(1);
+		Wait.waitForSeconds(2);
+		RobotStructure.getInstance().rightMotorReg.flt();
 		
 		RobotStructure.getInstance().armMotorLeftReg.setSpeed(800);
 		RobotStructure.getInstance().armMotorLeftReg.rotate(130);
@@ -28,8 +31,9 @@ public class Run2 extends RobotRun {
 		Wait.waitForSeconds(3);
 		RobotStructure.getInstance().armMotorRightReg.flt();
 
-		GyroSensor.gyroFollower(-50, -2, 400, Chassis.distToDeg(90), Direction.BACKWARD, false);
-		Wait.waitForSeconds(5);
+		Chassis.tankDrive(500, 750, Chassis.distToDeg(2), Direction.BACKWARD);
+		Wait.waitForSeconds(2);
+		Chassis.tankDrive(500, 750, Chassis.distToDeg(88), Direction.BACKWARD);
 	}
 
 }
