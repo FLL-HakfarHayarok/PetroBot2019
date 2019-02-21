@@ -15,7 +15,7 @@ public class Run1 extends RobotRun{
 		GyroSensor.resetGyro();
 		
 		//Driving straight to the extraction mission
-		GyroSensor.gyroFollower(30, 0, 500, Chassis.distToDeg(27), Direction.FORWARD, false);
+		GyroSensor.gyroFollower(30, 0, 500, Chassis.distToDeg(45), Direction.FORWARD, false);
 		
 		//Check if the run was stopped
 		if(!RunHandler.getCurrentRun().isActive()) {
@@ -30,8 +30,8 @@ public class Run1 extends RobotRun{
 		RobotStructure.getInstance().armMotorLeftReg.flt();
 		
 		//Drive and turn away from the extraction mission
-		GyroSensor.gyroFollower(30, 0, 500, Chassis.distToDeg(10), Direction.FORWARD, false);
-		GyroSensor.turnToAngle(-90, 600);
+		GyroSensor.gyroFollower(30, 0, 400, Chassis.distToDeg(12), Direction.FORWARD, false);
+		GyroSensor.turnToAngle(90, 600);
 		
 		//Check if the run was stopped
 		if(!RunHandler.getCurrentRun().isActive()) {

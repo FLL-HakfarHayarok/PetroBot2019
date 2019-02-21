@@ -14,26 +14,22 @@ public class Run2 extends RobotRun {
 		GyroSensor.resetGyro();
 		
 		//Drive towards the mission chunk
-		Chassis.tankDrive(400, 450, Chassis.distToDeg(80));
-//		GyroSensor.gyroFollower(30, 0, 200, Chassis.distToDeg(5), Direction.FORWARD, false);
+		GyroSensor.gyroFollower(50, -6, 500, Chassis.distToDeg(80), Direction.FORWARD, false);
+
+		RobotStructure.getInstance().rightMotorReg.setSpeed(800);
+		RobotStructure.getInstance().rightMotorReg.forward();
+		Wait.waitForSeconds(1);
 		
-		//Make sure that M02 and M03 were complete
-		   
-//		RobotStructure.getInstance().armMotorRightReg.flt();
-//		RobotStructure.getInstance().rightMotorReg.setSpeed(550);
-//		Chassis.drive(Direction.BACKWARD);
-//		Wait.waitForSeconds(0.55);
-//		Chassis.brake(false);
-//		Wait.waitForSeconds(2);
-//		RobotStructure.getInstance().armMotorRightReg.setSpeed(100);
-//		RobotStructure.getInstance().armMotorRightReg.rotate(-180);
-//		Chassis.drive(Direction.BACKWARD);
-//		Wait.waitForSeconds(0.05);
-//		Chassis.brake(false);
-//		RobotStructure.getInstance().armMotorRightReg.rotate(180);
-//		Wait.waitForSeconds(1);
-//		RobotStructure.getInstance().armMotorRightReg.flt();
-//		GyroSensor.gyroFollower(-30, 0, 500, Chassis.distToDeg(80), Direction.BACKWARD, false);
+		RobotStructure.getInstance().armMotorLeftReg.setSpeed(800);
+		RobotStructure.getInstance().armMotorLeftReg.rotate(130);
+		
+		RobotStructure.getInstance().armMotorRightReg.setSpeed(150);
+		RobotStructure.getInstance().armMotorRightReg.backward();
+		Wait.waitForSeconds(3);
+		RobotStructure.getInstance().armMotorRightReg.flt();
+
+		GyroSensor.gyroFollower(-50, -2, 400, Chassis.distToDeg(90), Direction.BACKWARD, false);
+		Wait.waitForSeconds(5);
 	}
 
 }

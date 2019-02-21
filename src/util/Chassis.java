@@ -22,7 +22,7 @@ public class Chassis {
 	 * @return The distance in motor degrees
 	 */
 	public static int distToDeg(double dist) {
-		return (int) (dist/K_drive*360);
+		return (int) (dist/K_perimeter*360);
 	}
 	
 	/**
@@ -103,16 +103,15 @@ public class Chassis {
 	}
 	
 	public static void tankDrive(double leftSpeed, double rightSpeed, double revolutions) {
-		RobotStructure.getInstance().leftMotorReg.startSynchronization();
-			RobotStructure.getInstance().leftMotorReg.setSpeed((int) leftSpeed);
-			RobotStructure.getInstance().rightMotorReg.setSpeed((int) rightSpeed);
-		RobotStructure.getInstance().leftMotorReg.endSynchronization();
+		RobotStructure.getInstance().leftMotorReg.setSpeed((int) leftSpeed);
+		RobotStructure.getInstance().rightMotorReg.setSpeed((int) rightSpeed);
 		
 		RobotStructure.getInstance().leftMotorReg.resetTachoCount();
 		RobotStructure.getInstance().rightMotorReg.resetTachoCount();
 		
-		Chassis.drive(Direction.FORWARD);
-		Wait.waitUntil(Chassis.getDistance() >= revolutions);
+		drive(Direction.FORWARD);
+		while(Math.abs(getDistance()) < revolutions);
+		brake(false);
 	}
 	
 

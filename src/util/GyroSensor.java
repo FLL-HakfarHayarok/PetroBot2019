@@ -125,7 +125,7 @@ public class GyroSensor {
 		RobotStructure.getInstance().rightMotorReg.setSpeed(power);
 		RobotStructure.getInstance().leftMotorReg.setSpeed(power);
 		
-		if (angle > 0) {
+		if (angle < GyroSensor.getCurrentAngle()) {
 			RobotStructure.getInstance().rightMotorReg.forward();
 			RobotStructure.getInstance().leftMotorReg.backward();
 		}
