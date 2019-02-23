@@ -10,6 +10,7 @@ import runs.Run1;
 import runs.Run2;
 import runs.Run3;
 import runs.Run4;
+import runs.Run5;
 import util.Chassis;
 
 /**
@@ -106,7 +107,7 @@ public class RunSelector {
 			selectedRun = new Run4();
 			break;
 		case 5:
-			//selectedRun = new Run5();
+			selectedRun = new Run5();
 			break;
 		case 6:
 			selectedRun = new MotorControl();
