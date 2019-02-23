@@ -70,22 +70,62 @@ public class GyroSensor {
 	 * @param P0 A base power value
 	 * @param degrees The degrees that the robot will travel
 	 * @param direction The direction the robot will travel 
+	 * @param mode - changes the stop condition
 	 * @param brake Whether the robot will brake or coast
 	 */
-	public static void gyroFollower(double kP, int targetAngle, int P0, int degrees, Direction direction, boolean brake){
+	public static void gyroFollower(double kP, int targetAngle, int P0, double duration, Direction direction, DriveMode mode, boolean brake){
+		long startTime = System.currentTimeMillis();
+		
 		initGyroFollower(P0, direction);
 		LCD.clear();
 		//Wait until a distance is traveled
-		while(Math.abs(Chassis.getDistance()) < degrees && RunHandler.getCurrentRun().isActive()) {
+		if(mode == DriveMode.DEGREES) {
+			while(Math.abs(Chassis.getDistance()) < duration && RunHandler.getCurrentRun().isActive()) {
 			LCD.drawInt(getCurrentAngle(), 0, 0);
 			if(getCurrentAngle() < targetAngle)
 				RobotStructure.getInstance().rightMotorReg.setSpeed((int) ((kP*(targetAngle+getCurrentAngle()))+P0));
 			else
 				RobotStructure.getInstance().leftMotorReg.setSpeed((int) ((kP*(targetAngle-getCurrentAngle()))+P0));
+			}
+		} else if (mode == DriveMode.SECONDS) {
+			while(System.currentTimeMillis() - startTime < duration && RunHandler.getCurrentRun().isActive()) {
+			LCD.drawInt(getCurrentAngle(), 0, 0);
+			if(getCurrentAngle() < targetAngle)
+				RobotStructure.getInstance().rightMotorReg.setSpeed((int) ((kP*(targetAngle+getCurrentAngle()))+P0));
+			else
+				RobotStructure.getInstance().leftMotorReg.setSpeed((int) ((kP*(targetAngle-getCurrentAngle()))+P0));
+			}
 		}
+		
 		Chassis.brake(brake);
 	}
 	
+	public static void gyroFollowerDegrees(double kP, int targetAngle, int P0, double degrees, Direction direction, boolean brake) {
+		gyroFollower(kP, targetAngle, P0, degrees, direction, DriveMode.DEGREES, brake);
+	}
+
+	public static void gyroFollowerMillis(double kP, int targetAngle, int P0, long milliseconds, Direction direction, boolean brake) {
+		gyroFollower(kP, targetAngle, P0, milliseconds, direction, DriveMode.SECONDS, brake);
+	}
+	
+	public static void gyroFollowerUntilBlack(double kP, int targetAngle, int P0, int linesPassed, ColorSensorID sensorID, Direction direction, boolean brake){
+		initGyroFollower(P0, direction);
+		int linesActuallyPassed = 0;
+		LCD.clear();
+		//Wait until a distance is traveled
+		while(linesPassed > linesActuallyPassed) {
+			LCD.drawInt(getCurrentAngle(), 0, 0);
+			if(getCurrentAngle() < targetAngle)
+				RobotStructure.getInstance().rightMotorReg.setSpeed((int) ((kP*(targetAngle+getCurrentAngle()))+P0));
+			else
+				RobotStructure.getInstance().leftMotorReg.setSpeed((int) ((kP*(targetAngle-getCurrentAngle()))+P0));
+			if (ColorSensor.isBlack(sensorID)) {
+				linesActuallyPassed++;
+			}
+		}
+		Chassis.brake(brake);
+	}
+
 	
 	/**
 	 * A gyro follower using the PID tuning algorithm.

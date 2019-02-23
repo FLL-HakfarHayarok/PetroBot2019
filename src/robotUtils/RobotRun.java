@@ -7,7 +7,7 @@ import lejos.robotics.RegulatedMotor;
  * Abstraction for a robot run. Starts both itself and a stopper thread which
  * interrupts the run if the escape button is pressed.
  * 
- * @author John & Wifi
+ * @author John & PetroBlitz #841
  */
 public abstract class RobotRun extends Thread {
 	
@@ -23,17 +23,16 @@ public abstract class RobotRun extends Thread {
 		
 		LCD.clear();
 		
-		//set current run
+		//Set current run
 		RunHandler.setCurrentRun(this);
 		
-		//create a stopper for this run
+		//Create a stopper for this run
 		new RunStopper().start();
 		
-		//start chassis synchronization
-		//TODO: input your motors here
+		//Start chassis synchronization
      	RobotStructure.getInstance().leftMotorReg.synchronizeWith(new RegulatedMotor[] {RobotStructure.getInstance().rightMotorReg});
 		 
-		//run the implemented contents method
+		//Run the implemented contents method
 		runInstructions();
 	}
 	
@@ -44,10 +43,18 @@ public abstract class RobotRun extends Thread {
 	 */
 	public abstract void runInstructions();
 	
+	/**
+	 * Returns if the run is active.
+	 * 
+	 * @return whether the run is active.
+	 */
 	public boolean isActive() {
 		return this.active;
 	}
 	
+	/**
+	 * Deactivates the current run.
+	 */
 	public void deactivate(){
 		this.active = false;
 	}

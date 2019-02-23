@@ -45,31 +45,53 @@ public class Chassis {
 		RobotStructure.getInstance().armMotorRightReg.flt();
 	}
 	
+	/**
+	 * Rotates the left arm using degrees and the power transmission relation
+	 * 
+	 * @param angle The degrees the arm should rotate
+	 * @param powerTransmissionRelation The power transmission relation of the arm
+	 */
     public static void rotateLeftArm(int angle, double powerTransmissionRelation)
     {
 		RobotStructure.getInstance().armMotorLeftReg.rotate((int) (angle * powerTransmissionRelation));
     }
 
+    /**
+	 * Rotates the right arm using degrees and the power transmission relation
+	 * 
+	 * @param angle The degrees the arm should rotate
+	 * @param powerTransmissionRelation The power transmission relation of the arm
+	 */
     public static void rotateRightArm(int angle, double powerTransmissionRelation)
     {
 		RobotStructure.getInstance().armMotorRightReg.rotate((int) (angle * powerTransmissionRelation));
     }
 
+    /**
+	 * Rotates the left arm using degrees and the power transmission relation
+	 * 
+	 * @param angle The degrees the arm should rotate
+	 */
     public static void rotateLeftArm(int angle)
     {
-		RobotStructure.getInstance().armMotorLeftReg.rotate((int) (angle));
+		RobotStructure.getInstance().armMotorLeftReg.rotate(angle);
     }
 
+    /**
+	 * Rotates the right arm using degrees and the power transmission relation
+	 * 
+	 * @param angle The degrees the arm should rotate
+	 */
     public static void rotateRightArm(int angle)
     {
-		RobotStructure.getInstance().armMotorRightReg.rotate((int) (angle));
+		RobotStructure.getInstance().armMotorRightReg.rotate(angle);
     }
 
     
 	/**
 	 * This function stops the wheels 
 	 * 
-	 * @param brake whether the robot should stop or just stop sending power to the motors
+	 * @param brake Whether the robot should stop or just stop sending power to the motors
 	 */
 	public static void brake(boolean brake) {		
 		RobotStructure.getInstance().leftMotorReg.startSynchronization();
@@ -85,9 +107,9 @@ public class Chassis {
 	}
 	
 	/**
-	 * This function drives
+	 * A function that moves the robot in a direction
 	 * 
-	 * @param d direction to drive
+	 * @param d Direction to drive
 	 */
 	public static void drive(Direction d) {		
 		RobotStructure.getInstance().leftMotorReg.startSynchronization();
@@ -102,7 +124,21 @@ public class Chassis {
 		RobotStructure.getInstance().leftMotorReg.endSynchronization();
 	}
 	
-	public static void tankDrive(int leftSpeed, int rightSpeed, double revolutions, Direction direction) {
+	/**
+	 * A tank drive function the moves the robot in the direction and powers given to it.
+	 * The function can stop either after a determined duration or distance driven.
+	 * 
+	 * @param leftSpeed The speed of left motor
+	 * @param rightSpeed The speed of right motor
+	 * @param duration The duration of function, could be seconds or degrees
+	 * @param direction The direction to drive
+	 * @param mode Either degrees or seconds
+	 * @param brake Whether the robot should brake or coast
+	 */
+	public static void tankDrive(int leftSpeed, int rightSpeed, double duration, Direction direction, DriveMode mode, boolean brake) {
+		
+		long startTime = System.currentTimeMillis();
+		
 		RobotStructure.getInstance().leftMotorReg.setSpeed(leftSpeed);
 		RobotStructure.getInstance().rightMotorReg.setSpeed(rightSpeed);
 		
@@ -110,11 +146,42 @@ public class Chassis {
 		RobotStructure.getInstance().rightMotorReg.resetTachoCount();
 		
 		drive(direction);
-		while(Math.abs(getDistance()) < revolutions && RunHandler.getCurrentRun().isActive());
-		brake(false);
+		if (mode == DriveMode.DEGREES){
+			while(Math.abs(getDistance()) < duration && RunHandler.getCurrentRun().isActive());
+		}else if (mode == DriveMode.SECONDS) {
+			while (System.currentTimeMillis() - startTime <  duration && RunHandler.getCurrentRun().isActive());
+		}
+	
+		brake(brake);
 	}
 	
-
+	/**
+	 * An alias for the tank drive function using degrees
+	 * 
+	 * @param leftSpeed The speed of left motor
+	 * @param rightSpeed The speed of right motor
+	 * @param duration The duration of function in degrees
+	 * @param direction The direction to drive
+	 * @param brake Whether the robot should brake or coast
+	 */
+	public static void tankDriveDegrees(int leftSpeed, int rightSpeed, double degrees, Direction direction, boolean brake) {
+		tankDrive(leftSpeed, rightSpeed, degrees, direction, DriveMode.DEGREES, brake);
+	}
+	
+	/**
+	 * An alias for the tank drive function using seconds
+	 * 
+	 * @param leftSpeed The speed of left motor
+	 * @param rightSpeed The speed of right motor
+	 * @param duration The duration of function in milliseconds
+	 * @param direction The direction to drive
+	 * @param brake Whether the robot should brake or coast
+	 */
+	public static void tankDriveMillis(int leftSpeed, int rightSpeed, long milliseconds, Direction direction, boolean brake) {
+		tankDrive(leftSpeed, rightSpeed, milliseconds, direction, DriveMode.SECONDS, brake);
+	}
+	
+	
 	/**
 	 * Returns the average degrees moved by the robot
 	 */

@@ -13,6 +13,9 @@ public class ColorSensor {
 	// LEFT, CENTER, RIGHT
 	public static double[] blacks, whites = new double[3];
 
+	/**
+	 * Calibrates the color sensors
+	 */
 	public static void calibrateColor() {
 
 		// Place robot on a black surface
@@ -154,10 +157,16 @@ public class ColorSensor {
 			RobotStructure.getInstance().colorRightIDSampler.fetchSample(dump, 0);
 			return (dump[0] == Color.BLACK);
 		default:
-			throw new MissingResourceException("wtf", "A run", "lul");
+			throw new MissingResourceException("Sensor does not exist!", "Color Sensor ID", "getColor()");
 		}
 	}
-
+	
+	/**
+	 * Returns the color a color sensor sees
+	 * 
+	 * @param sensor The sensor to check
+	 * @return The color seen
+	 */
 	public static Colors getColor(ColorSensorID sensor) {
 		float[] dump = new float[5];
 		switch (sensor) {
@@ -171,7 +180,7 @@ public class ColorSensor {
 			RobotStructure.getInstance().colorCenterIDSampler.fetchSample(dump, 0);
 			break;
 		default:
-			throw new MissingResourceException("wtf", "A run", "lul");
+			throw new MissingResourceException("Sensor does not exist!", "Color Sensor ID", "getColor()");
 		}
 
 		if (dump[0] == Color.BLACK)

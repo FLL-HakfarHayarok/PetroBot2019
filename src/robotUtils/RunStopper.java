@@ -6,7 +6,7 @@ import util.Chassis;
 /**
  * A thread that will stop a given run when the escape button is pressed
  * 
- * @author John & Wifi
+ * @author John & PetroBlitz #841
  */
 public class RunStopper extends Thread {
 
@@ -30,9 +30,9 @@ public class RunStopper extends Thread {
 	 */
 	@Override
 	public void run() {
-		//loops as long as target is running
+		//Loops as long as target is running
 		while(target.isActive()) {
-			//when escape is pressed, interrupt target and stop motors immediately
+			//When escape is pressed, interrupt target and stop motors immediately
 			if(Button.getButtons() == Button.ID_ESCAPE) {
 				while(Button.getButtons() == Button.ID_ESCAPE);
 				try {

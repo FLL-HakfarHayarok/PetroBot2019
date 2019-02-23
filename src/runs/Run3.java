@@ -1,27 +1,39 @@
 package runs;
 
 import robotUtils.RobotRun;
+import robotUtils.RobotStructure;
 import util.Chassis;
 import util.Direction;
 import util.GyroSensor;
-import util.Wait;
 
 public class Run3 extends RobotRun {
-
-	int linesPassed = 2;
-	
 	@Override
 	public void runInstructions() {
-		
+		//Reset the gyro sensor
 		GyroSensor.resetGyro();
 		
-		GyroSensor.gyroFollower(15, 0, 400, Chassis.distToDeg(115), Direction.FORWARD, false);
-		Wait.waitForSeconds(0.3);
-		//Drives forward until reaches HABITATION HUB mission
-		GyroSensor.turnToAngle(-25, 150);	//Turns 45 degrees towards FOOD GROWTH mission
-//		Chassis.tankDrive (200, 200, Chassis.distToDeg(30));
-//		GyroSensor.turnToAngle(-90, 150);	//Turns 45 degrees towards FOOD GROWTH mission		
-//		GyroSensor.gyroFollower(15, -90, 300, Chassis.distToDeg(10), Direction.FORWARD, false);
+		//Drive towards the Habitation hub
+		GyroSensor.gyroFollowerDegrees(20, 0, 400, Chassis.distToDeg(30), Direction.FORWARD, false);
 		
+		//Move the arm so that it doesn't hit the Habitation hub
+		RobotStructure.getInstance().armMotorRightReg.setSpeed(800);
+		Chassis.rotateRightArm(40, 9);
+		
+		//Drive all the way to the Habitation hub
+		GyroSensor.gyroFollowerMillis(15, 0, 400, 5200, Direction.FORWARD, false);
+		
+		//Take out the cone module
+		Chassis.rotateRightArm(-90, 9);
+		Chassis.tankDriveDegrees(800, 800, Chassis.distToDeg(1.5), Direction.BACKWARD, false);
+		Chassis.tankDriveMillis(800, 800, 1000, Direction.FORWARD, false);
+		Chassis.rotateRightArm(120, 9);
+		
+		//Move Gerhard into the Airlock chamber
+		RobotStructure.getInstance().armMotorLeftReg.setSpeed(200);
+		RobotStructure.getInstance().armMotorLeftReg.rotate(600);
+		
+		//Return to the base
+		Chassis.tankDriveDegrees(100, 100, Chassis.distToDeg(15), Direction.BACKWARD, false);
+		Chassis.tankDriveMillis(500, 800, 7000, Direction.BACKWARD, true);
 	}
 }

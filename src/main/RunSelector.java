@@ -18,7 +18,7 @@ import util.Chassis;
  * Arrow is moved using the up and down buttons on the robot, select run with center button.
  * Note that the RobotStructure must be initialized here in order for it to be used in all other programs.
  * 
- * @author John & Wifi
+ * @author John & PetoBlitz #841
  */
 
 public class RunSelector {
