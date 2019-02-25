@@ -1,9 +1,12 @@
 package runs;
 
 import robotUtils.RobotRun;
+import robotUtils.RobotStructure;
+import robotUtils.RunHandler;
 import util.Chassis;
 import util.Direction;
 import util.GyroSensor;
+import util.Side;
 import util.Wait;
 
 public class Run4 extends RobotRun {
@@ -12,24 +15,36 @@ public class Run4 extends RobotRun {
 	
 	@Override
 	public void runInstructions() {
-		//Reset the gyro sensor
 		GyroSensor.resetGyro();
+		GyroSensor.gyroFollowerDegrees(10, 0, 400, Chassis.distToDeg(63), Direction.FORWARD, false);
+		GyroSensor.turnToAngle(-45, 100);
+		GyroSensor.gyroFollowerDegrees(10, 45, 400, Chassis.distToDeg(60), Direction.FORWARD, false);
+
+		// Check if the run was stopped
+		if (!RunHandler.getCurrentRun().isActive()) {
+			return;
+		}
 		
-		GyroSensor.gyroFollowerDegrees(15, 0, 400, Chassis.distToDeg(115), Direction.FORWARD, false);
-		Wait.waitForSeconds(0.5);
-		//Drives forward until reaches HABITATION HUB mission
-		
-		GyroSensor.turnToAngle(-45, 150);	//Turns 45 degrees towards FOOD GROWTH mission
+		RobotStructure.getInstance().rightMotorReg.setSpeed(100);
+		RobotStructure.getInstance().leftMotorReg.setSpeed(100);
+
+		while (GyroSensor.getCurrentAngle() < -25 && RunHandler.getCurrentRun().isActive()) {
+			RobotStructure.getInstance().rightMotorReg.backward();
+			RobotStructure.getInstance().leftMotorReg.forward();
+		}
+
+		RobotStructure.getInstance().rightMotorReg.flt();
+		RobotStructure.getInstance().leftMotorReg.flt();
+
+		// Check if the run was stopped
+		if (!RunHandler.getCurrentRun().isActive()) {
+			return;
+		}
+
 		Wait.waitForSeconds(1);
-//		
-//		GyroSensor.gyroFollowerUntilBlack(15, GyroSensor.getCurrentAngle(), 400, 1, ColorSensorID.CENTER, Direction.FORWARD, false);
-//		Wait.waitForSeconds(1);
-//		GyroSensor.gyroFollowerDegrees(15, GyroSensor.getCurrentAngle(), 400, Chassis.distToDeg(27), Direction.FORWARD, false);
-//		Wait.waitForSeconds(1);
-//		GyroSensor.turnToAngle(-80, 100);
-//		GyroSensor.gyroFollowerUntilBlack(15, -80, 200, 1, ColorSensorID.LEFT, Direction.FORWARD, false);
-//		GyroSensor.turnToAngle(90, 200);
-//		Chassis.tankDriveMillis(400, 400, Chassis.distToDeg(20), Direction.BACKWARD, false);
-		
+
+		GyroSensor.gyroFollowerDegrees(10, 0, 400, Chassis.distToDeg(22), Direction.FORWARD, false);
+		Chassis.curveDrive(25, 90, 600, Side.RIGHT, false);
+	   
 	}
 }

@@ -24,10 +24,13 @@ public class Run3 extends RobotRun {
 		
 		//Move the arm so that it doesn't hit the Habitation hub
 		RobotStructure.getInstance().armMotorRightReg.setSpeed(800);
-		Chassis.rotateRightArm(40, 9);
+		RobotStructure.getInstance().armMotorRightReg.forward();
+		Wait.waitForSeconds(2);
+		RobotStructure.getInstance().armMotorRightReg.stop();
+//		Chassis.rotateRightArm(40, 9);
 		
 		//Drive all the way to the Habitation hub
-		GyroSensor.gyroFollowerMillis(15, 0, 400, 5200, Direction.FORWARD, false);
+		GyroSensor.gyroFollowerMillis(15, 0, 400, 4700, Direction.FORWARD, false);
 		
 		//Check if the run was stopped
 		if(!RunHandler.getCurrentRun().isActive()) {
@@ -35,22 +38,22 @@ public class Run3 extends RobotRun {
 		}
 		
 		//Take out the cone module
-		Chassis.rotateRightArm(-90, 9);
+		RobotStructure.getInstance().armMotorRightReg.backward();
+		Wait.waitForSeconds(2);
 		Chassis.tankDriveDegrees(800, 800, Chassis.distToDeg(1.5), Direction.BACKWARD, false);
-		Chassis.tankDriveMillis(800, 800, 1000, Direction.FORWARD, false);
+		Chassis.tankDriveMillis(800, 800, 500, Direction.FORWARD, false);
 		Wait.waitForSeconds(0.5);
 		
 		//Check if the run was stopped
 		if(!RunHandler.getCurrentRun().isActive()) {
 			return;
 		}
-		Chassis.tankDriveDegrees(800, 800, Chassis.distToDeg(1.5), Direction.BACKWARD, false);
-		Chassis.tankDriveMillis(800, 800, 1000, Direction.FORWARD, false);
-		Chassis.rotateRightArm(120, 9);
+		
+		Chassis.rotateRightArm(120, 7);
 		
 		
 		//Return to the base
 		Chassis.tankDriveDegrees(100, 100, Chassis.distToDeg(15), Direction.BACKWARD, false);
-		Chassis.tankDriveMillis(500, 800, 7000, Direction.BACKWARD, true);
+		Chassis.tankDriveMillis(400, 800, 7000, Direction.BACKWARD, true);
 	}
 }
