@@ -12,7 +12,7 @@ import util.Wait;
 public class Run4 extends RobotRun {
 
 	int linesPassed = 2;
-	
+
 	@Override
 	public void runInstructions() {
 		GyroSensor.resetGyro();
@@ -24,9 +24,10 @@ public class Run4 extends RobotRun {
 		if (!RunHandler.getCurrentRun().isActive()) {
 			return;
 		}
-		
+
 		RobotStructure.getInstance().rightMotorReg.setSpeed(100);
 		RobotStructure.getInstance().leftMotorReg.setSpeed(100);
+		RobotStructure.getInstance().armMotorRightReg.setSpeed(800);
 
 		while (GyroSensor.getCurrentAngle() < -25 && RunHandler.getCurrentRun().isActive()) {
 			RobotStructure.getInstance().rightMotorReg.backward();
@@ -43,8 +44,11 @@ public class Run4 extends RobotRun {
 
 		Wait.waitForSeconds(1);
 
-		GyroSensor.gyroFollowerDegrees(10, 0, 400, Chassis.distToDeg(22), Direction.FORWARD, false);
-		Chassis.curveDrive(25, 90, 600, Side.RIGHT, false);
-	   
+		GyroSensor.gyroFollowerDegrees(10, 0, 400, Chassis.distToDeg(32), Direction.FORWARD, false);
+		Chassis.curveDrive(15, 115, 600, Side.RIGHT, false);
+		Chassis.tankDriveMillis(200, 200, 2000, Direction.FORWARD, false);
+		Chassis.rotateRightArm(-55, 129.6);
+		Chassis.tankDriveMillis(320, 300, 3000, Direction.BACKWARD, false);
+		Chassis.tankDriveMillis(300, 800, 1500, Direction.FORWARD, true);
 	}
 }
